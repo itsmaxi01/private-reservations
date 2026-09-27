@@ -14,7 +14,7 @@
 
 - [ ] Repositorio publicado en GitHub.
 - [ ] Blueprint creado desde `render.yaml`.
-- [ ] `DATABASE_URL`, `SUPABASE_URL` y `SUPABASE_PUBLISHABLE_KEY` configuradas.
+- [ ] `DATABASE_HOST`, `DATABASE_USER`, `DATABASE_PASSWORD`, `SUPABASE_URL` y `SUPABASE_PUBLISHABLE_KEY` configuradas.
 - [ ] `ADMIN_EMAIL` y `MEMBER_EMAIL` configurados y distintos.
 - [ ] Build y migración inicial completados.
 - [ ] `/api/health` responde `200`.

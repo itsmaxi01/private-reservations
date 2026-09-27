@@ -3,12 +3,21 @@ from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from sqlalchemy import URL
 
 
 class Settings(BaseSettings):
     """Application configuration loaded from environment variables."""
 
-    database_url: str = Field(validation_alias="DATABASE_URL")
+    database_url: str | None = Field(default=None, validation_alias="DATABASE_URL")
+    database_host: str | None = Field(default=None, validation_alias="DATABASE_HOST")
+    database_port: int = Field(default=5432, validation_alias="DATABASE_PORT")
+    database_name: str = Field(default="postgres", validation_alias="DATABASE_NAME")
+    database_user: str | None = Field(default=None, validation_alias="DATABASE_USER")
+    database_password: str | None = Field(
+        default=None,
+        validation_alias="DATABASE_PASSWORD",
+    )
     app_time_zone: str = Field(
         default="America/Mexico_City",
         validation_alias="APP_TIME_ZONE",
@@ -33,12 +42,38 @@ class Settings(BaseSettings):
 
     @field_validator("database_url")
     @classmethod
-    def database_url_must_use_postgresql(cls, value: str) -> str:
+    def database_url_must_use_postgresql(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
         if value.startswith("postgresql://"):
             return value.replace("postgresql://", "postgresql+psycopg://", 1)
         if not value.startswith("postgresql+psycopg://"):
             raise ValueError("DATABASE_URL must be a PostgreSQL URL using psycopg")
         return value
+
+    def resolved_database_url(self) -> str:
+        """Return a psycopg URL from DATABASE_URL or separate deployment fields."""
+
+        if self.database_url:
+            return self.database_url
+
+        required = {
+            "DATABASE_HOST": self.database_host,
+            "DATABASE_USER": self.database_user,
+            "DATABASE_PASSWORD": self.database_password,
+        }
+        missing = [name for name, value in required.items() if not value]
+        if missing:
+            raise RuntimeError(f"Missing database settings: {', '.join(missing)}")
+
+        return URL.create(
+            drivername="postgresql+psycopg",
+            username=self.database_user,
+            password=self.database_password,
+            host=self.database_host,
+            port=self.database_port,
+            database=self.database_name,
+        ).render_as_string(hide_password=False)
 
     @field_validator("app_time_zone")
     @classmethod

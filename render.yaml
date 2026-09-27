@@ -5,7 +5,15 @@ services:
     plan: free
     healthCheckPath: /api/health
     envVars:
-      - key: DATABASE_URL
+      - key: DATABASE_HOST
+        value: aws-0-us-west-2.pooler.supabase.com
+      - key: DATABASE_PORT
+        value: "5432"
+      - key: DATABASE_NAME
+        value: postgres
+      - key: DATABASE_USER
+        value: postgres.mqdtfdioynpocmmexyvp
+      - key: DATABASE_PASSWORD
         sync: false
       - key: APP_TIME_ZONE
         value: America/Mexico_City
