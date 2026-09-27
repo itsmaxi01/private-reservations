@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nuestro espacio</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header><p class="eyebrow">PRIVADO · DOS PERSONAS</p><h1>Nuestro espacio</h1><p id="identity"></p></header>
+    <section id="login" class="panel narrow">
+      <h2>Entrar</h2><p>Recibirás un enlace de acceso en tu correo autorizado.</p>
+      <form id="login-form"><label>Correo<input name="email" type="email" required></label><button>Enviar enlace</button></form>
+    </section>
+    <div id="app" hidden>
+      <nav><button data-view="reservations">Reservaciones</button><button data-view="watchlist">WatchList</button><button data-view="messages">Mensajes</button><button id="logout" class="ghost">Salir</button></nav>
+      <p id="notice" role="status"></p>
+      <section id="reservations" class="view panel">
+        <h2>Nueva reservación</h2>
+        <form id="reservation-form" class="grid">
+          <label>Tipo<select name="type"><option>DATE</option><option>WATCH</option></select></label>
+          <label>Fecha<input name="date" type="date" required></label><label>Hora<input name="time" type="time" required></label>
+          <label class="date-field">Título<input name="title"></label><label class="date-field">Motivo<input name="reason"></label>
+          <label class="watch-field" hidden>Contenido<select name="watch_item_id"></select></label>
+          <button>Reservar</button>
+        </form><h2>Próximas</h2><div id="reservation-list" class="cards"></div>
+      </section>
+      <section id="watchlist" class="view panel" hidden>
+        <h2>Agregar contenido</h2><form id="watch-form" class="grid"><label>Título<input name="title" required></label><label>Tipo<select name="type"><option>MOVIE</option><option>ANIME</option></select></label><button>Agregar</button></form>
+        <h2>Pendientes y vistos</h2><div id="watch-list" class="cards"></div>
+      </section>
+      <section id="messages" class="view panel" hidden>
+        <h2>Dejar mensaje</h2><form id="message-form"><label>Mensaje<textarea name="content" required></textarea></label><label class="inline"><input name="is_pinned" type="checkbox"> Fijar</label><button>Enviar</button></form>
+        <div id="message-list" class="cards"></div>
+      </section>
+    </div>
+  </main>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
